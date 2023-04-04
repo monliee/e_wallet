@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_ewallet/models/transaksi.dart';
 import 'package:flutter_ewallet/widget/menu_box.dart';
+import 'package:flutter_ewallet/widget/transaksi_detail.dart';
+import 'package:flutter_ewallet/widget/transaksi_item.dart';
+import 'package:convex_bottom_bar/convex_bottom_bar.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -7,6 +11,8 @@ class HomeScreen extends StatefulWidget {
   @override
   State<HomeScreen> createState() => _HomeScreenState();
 }
+
+int currentIndex = 0;
 
 class _HomeScreenState extends State<HomeScreen> {
   @override
@@ -38,7 +44,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       child: CircleAvatar(
                         radius: 20,
                         backgroundImage:
-                            NetworkImage('https://i.pravatar.cc/150?img=3'),
+                            NetworkImage('https://i.pravatar.cc/150?img=11'),
                       ),
                     ),
                   ),
@@ -47,15 +53,17 @@ class _HomeScreenState extends State<HomeScreen> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: const [
                         Text(
-                          'Hallo',
+                          "Yo Welcome,",
                           style: TextStyle(
-                              fontWeight: FontWeight.w500, color: Colors.white),
+                            fontWeight: FontWeight.w500,
+                            color: Colors.white,
+                          ),
                         ),
                         SizedBox(
                           height: 5,
                         ),
                         Text(
-                          'Rio Ribal',
+                          "Rio Ribal R",
                           style: TextStyle(
                             color: Colors.white,
                             fontWeight: FontWeight.w700,
@@ -66,7 +74,6 @@ class _HomeScreenState extends State<HomeScreen> {
                     ),
                   ),
                   IconButton(
-                    onPressed: () {},
                     icon: Stack(
                       children: const [
                         Icon(
@@ -82,9 +89,10 @@ class _HomeScreenState extends State<HomeScreen> {
                             size: 8.0,
                             color: Colors.redAccent,
                           ),
-                        ),
+                        )
                       ],
                     ),
+                    onPressed: () {},
                   ),
                 ],
               ),
@@ -95,7 +103,7 @@ class _HomeScreenState extends State<HomeScreen> {
               child: Column(
                 children: const [
                   Text(
-                    'Saldo',
+                    "Saldo",
                     style: TextStyle(
                       color: Colors.white,
                       fontSize: 25,
@@ -105,7 +113,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   Padding(
                     padding: EdgeInsets.symmetric(vertical: 10),
                     child: Text(
-                      'Rp. 9,000,000,000',
+                      "Rp. 2,000,000,000",
                       style: TextStyle(
                         color: Colors.white,
                         fontSize: 30,
@@ -123,68 +131,115 @@ class _HomeScreenState extends State<HomeScreen> {
                 children: const [
                   MenuWidget(
                     icon: Icons.send_rounded,
-                    text: 'Kirim',
+                    text: "Kirim",
                   ),
                   MenuWidget(
                     icon: Icons.account_balance_wallet,
-                    text: 'Terima',
+                    text: "Terima",
                   ),
                   MenuWidget(
                     icon: Icons.payment,
-                    text: 'Bayar',
+                    text: "Bayar",
                   ),
                   MenuWidget(
                     icon: Icons.more_horiz,
-                    text: 'Lainnya',
+                    text: "Lainnya",
                   ),
                 ],
               ),
             ),
-            Container(
-              margin: const EdgeInsets.only(top: 50),
-              decoration: const BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.vertical(
-                  top: Radius.circular(45),
+            Expanded(
+              child: Container(
+                margin: const EdgeInsets.only(top: 50),
+                decoration: const BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.vertical(
+                    top: Radius.circular(45),
+                  ),
                 ),
-              ),
-              child: Column(
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.symmetric(
-                      vertical: 30,
-                      horizontal: 25,
-                    ),
-                    child: Row(
-                      children: [
-                        const Expanded(
-                          child: Text(
-                            'Transaksi Terakhir',
-                            style: TextStyle(
-                              fontSize: 18,
-                              color: Color(0xFF40538F),
-                              fontWeight: FontWeight.bold,
+                child: Column(
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.symmetric(
+                        vertical: 30,
+                        horizontal: 25,
+                      ),
+                      child: Row(
+                        children: [
+                          const Expanded(
+                            child: Text(
+                              "Transaksi Terakhir",
+                              style: TextStyle(
+                                fontSize: 18,
+                                color: Color(0xFF3D538F),
+                                fontWeight: FontWeight.bold,
+                              ),
                             ),
                           ),
-                        ),
-                        GestureDetector(
-                          onTap: () {},
-                          child: const Text(
-                            'Lihat Semua',
-                            textAlign: TextAlign.right,
-                            style: TextStyle(
-                                fontSize: 14, color: Color(0xff30538f)),
+                          GestureDetector(
+                            onTap: () {
+                              showModalBottomSheet(
+                                context: context,
+                                isScrollControlled: true,
+                                builder: (BuildContext ctx) {
+                                  return const DetailTransaksiScreen();
+                                },
+                              );
+                            },
+                            child: const Text(
+                              'Lihat Semua',
+                              textAlign: TextAlign.right,
+                              style: TextStyle(
+                                fontSize: 14,
+                                color: Color(0xFF3D538F),
+                              ),
+                            ),
                           ),
-                        )
-                      ],
+                        ],
+                      ),
                     ),
-                  ),
-                ],
+                    Expanded(
+                      child: ListView.builder(
+                        itemBuilder: (context, index) {
+                          return TransaksiItem(
+                            transaksi: transaksi[index],
+                          );
+                        },
+                        itemCount: transaksi.length,
+                      ),
+                    ),
+                  ],
+                ),
               ),
             ),
           ],
         ),
       ),
+      bottomNavigationBar: ConvexAppBar(
+        items: const [
+          TabItem(icon: Icons.receipt_rounded, title: 'Transaksi'),
+          TabItem(icon: Icons.credit_card, title: 'Kartu'),
+        ],
+        initialActiveIndex: 0,
+        onTap: (int i) => print('click index=$i'),
+      ),
+
+      // bottomNavigationBar: BottomNavigationBar(
+      //   items: const [
+      //     BottomNavigationBarItem(
+      //         icon: Icon(
+      //           Icons.receipt_rounded,
+      //         ),
+      //         label: 'Transaksi'),
+      //     BottomNavigationBarItem(
+      //         icon: Icon(
+      //           Icons.credit_card,
+      //         ),
+      //         label: 'Kartu'),
+      //   ],
+      //   selectedItemColor: const Color(0xFF3D538F),
+      //   unselectedItemColor: const Color(0xFF3D538F),
+      // ),
     );
   }
 }

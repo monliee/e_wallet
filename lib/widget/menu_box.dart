@@ -1,10 +1,20 @@
 import 'package:flutter/material.dart';
 
-class MenuWidget extends StatelessWidget {
+class MenuWidget extends StatefulWidget {
   final IconData icon;
   final String text;
-  const MenuWidget({super.key, required this.icon, required this.text});
 
+  const MenuWidget({
+    super.key,
+    required this.icon,
+    required this.text,
+  });
+
+  @override
+  State<MenuWidget> createState() => _MenuWidgetState();
+}
+
+class _MenuWidgetState extends State<MenuWidget> {
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -24,7 +34,7 @@ class MenuWidget extends StatelessWidget {
               borderRadius: BorderRadius.circular(20),
             ),
             child: Icon(
-              icon,
+              widget.icon,
               color: Colors.white,
             ),
           ),
@@ -32,7 +42,7 @@ class MenuWidget extends StatelessWidget {
             height: 5,
           ),
           Text(
-            text,
+            widget.text,
             style: const TextStyle(
               color: Colors.white,
               fontWeight: FontWeight.bold,
